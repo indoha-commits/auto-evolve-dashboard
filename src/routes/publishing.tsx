@@ -1,17 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppShell, Card, SectionHeader } from "@/components/AppShell";
-import { Linkedin, Plus, Check, Send } from "lucide-react";
+import { Send, Plus } from "lucide-react";
 import { apiPost, API_ENDPOINTS } from "../lib/api";
 
 export const Route = createFileRoute("/publishing")({
   head: () => ({ meta: [{ title: "Publishing — AutoEvolve" }] }),
   component: Publishing,
 });
-
-const accounts = [
-  { name: "LinkedIn", icon: Linkedin, color: "#0A66C2", handle: "@auto-evolve", connected: true },
-];
 
 function Publishing() {
   const [hook, setHook] = useState("");
@@ -41,24 +37,12 @@ function Publishing() {
   return (
     <AppShell title="Publishing" subtitle="Schedule and publish across every channel">
       <Card className="p-5">
-        <SectionHeader title="Connected Accounts" description={`${accounts.length} channel active`} />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {accounts.map((a) => (
-            <div key={a.name} className="rounded-lg border border-border bg-background/40 p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-md grid place-items-center text-white" style={{ background: a.color }}>
-                <a.icon className="h-5 w-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-sm font-medium truncate">{a.name}</p>
-                  <span className="rounded bg-primary/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-primary flex items-center gap-0.5">
-                    <Check className="h-2 w-2" /> Live
-                  </span>
-                </div>
-                <p className="text-xs text-muted-foreground truncate">{a.handle}</p>
-              </div>
-            </div>
-          ))}
+        <SectionHeader title="Connected Accounts" description="No accounts connected" />
+        <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
+          <div className="text-center">
+            <Plus className="mx-auto h-6 w-6 mb-2 opacity-40" />
+            <p>No connected accounts yet. Integration setup coming soon.</p>
+          </div>
         </div>
       </Card>
 
