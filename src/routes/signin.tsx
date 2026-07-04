@@ -10,18 +10,38 @@ export const Route = createFileRoute("/signin")({
 function SignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"password" | "magic">("password");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
 
-  async function handleSignIn() {
+  async function handlePasswordSignIn(e: React.FormEvent) {
+    e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithOtp({
+    setError("");
+    const { error: authError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    setLoading(false);
+    if (authError) {
+      setError(authError.message);
+      return;
+    }
+    router.navigate({ to: "/" });
+  }
+
+  async function handleMagicLink() {
+    setLoading(true);
+    setError("");
+    const { error: authError } = await supabase.auth.signInWithOtp({
       email,
       options: { shouldCreateUser: true },
     });
     setLoading(false);
-    if (error) {
-      alert(error.message);
+    if (authError) {
+      setError(authError.message);
       return;
     }
     setSent(true);
@@ -52,24 +72,74 @@ function SignInPage() {
       <div className="max-w-sm w-full space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold tracking-tight">Sign in to AutoEvolve</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Enter your email to get started</p>
+          <p className="mt-2 text-sm text-muted-foreground">Enter your credentials</p>
         </div>
 
+        {error && (
+          <div className="rounded-md border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-400">
+            {error}
+          </div>
+        )}
+
         <div className="space-y-4">
-          <input
-            type="email"
-            placeholder="you@company.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-md border border-border bg-background/60 px-3 py-2 text-sm outline-none focus:border-primary/60"
-          />
-          <button
-            onClick={handleSignIn}
-            disabled={loading || !email}
-            className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition disabled:opacity-50"
-          >
-            {loading ? "Sending…" : "Send magic link"}
-          </button>
+          {mode === "password" ? (
+            <form onSubmit={handlePasswordSignIn} className="space-y-3">
+              <input
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full rounded-md border border-border bg-background/60 px-3 py-2 text-sm outline-none focus:border-primary/60"
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full rounded-md border border-border bg-background/60 px-3 py-2 text-sm outline-none focus:border-primary/60"
+              />
+              <button
+                type="submit"
+                disabled={loading || !email || !password}
+                className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition disabled:opacity-50"
+              >
+                {loading ? "Signing in…" : "Sign in"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setMode("magic"); setError(""); }}
+                className="w-full text-xs text-muted-foreground hover:text-foreground transition"
+              >
+                Sign in with magic link instead
+              </button>
+            </form>
+          ) : (
+            <div className="space-y-3">
+              <input
+                type="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-md border border-border bg-background/60 px-3 py-2 text-sm outline-none focus:border-primary/60"
+              />
+              <button
+                onClick={handleMagicLink}
+                disabled={loading || !email}
+                className="w-full rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition disabled:opacity-50"
+              >
+                {loading ? "Sending…" : "Send magic link"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setMode("password"); setError(""); }}
+                className="w-full text-xs text-muted-foreground hover:text-foreground transition"
+              >
+                Sign in with password instead
+              </button>
+            </div>
+          )}
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-border" /></div>
