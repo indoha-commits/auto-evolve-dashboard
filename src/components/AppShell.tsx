@@ -87,13 +87,13 @@ function Sidebar() {
           <span className="text-muted-foreground">Learning Engine</span>
         </div>
         <div className="mt-2 flex items-baseline gap-1">
-          <span className="text-2xl font-semibold tracking-tight tabular-nums">87</span>
+          <span className="text-2xl font-semibold tracking-tight tabular-nums">—</span>
           <span className="text-xs text-muted-foreground">/100 score</span>
         </div>
         <div className="mt-2 h-1 rounded-full bg-muted overflow-hidden">
-          <div className="h-full bg-primary" style={{ width: "87%" }} />
+          <div className="h-full bg-primary" style={{ width: "0%" }} />
         </div>
-        <div className="mt-2 text-[11px] text-muted-foreground">v15 · +12 this week</div>
+        <div className="mt-2 text-[11px] text-muted-foreground">No data yet</div>
       </div>
     </aside>
   );
@@ -126,9 +126,9 @@ function TopBar({ title, subtitle }: { title: string; subtitle?: string }) {
 
       <button className="flex items-center gap-2 rounded-md border border-border bg-card pl-1 pr-2 py-1 hover:bg-sidebar-accent transition">
         <div className="h-6 w-6 rounded bg-gradient-to-br from-primary to-emerald-700 grid place-items-center text-[10px] font-semibold text-primary-foreground">
-          AC
+          ?
         </div>
-        <span className="text-xs">Acme Mining</span>
+        <span className="text-xs">Account</span>
         <ChevronDown className="h-3 w-3 text-muted-foreground" />
       </button>
     </header>
