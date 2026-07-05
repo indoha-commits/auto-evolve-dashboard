@@ -1,6 +1,6 @@
 import { supabase } from "./supabase";
 
-const API_BASE =
+export const API_BASE =
   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_API_BASE) ||
   "https://hermes.indataflow.com";
 
